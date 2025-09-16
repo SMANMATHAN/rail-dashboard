@@ -92,8 +92,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             
             <div className="flex items-center space-x-4">
               <button className="relative p-2 text-gray-600 hover:text-gray-900">
-                <Bell className="w-6 h-6" />
-                <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full"></span>
+                {/* <Bell className="w-6 h-6" /> */}
+                {/* <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full"></span> */}
               </button>
               
               <div className="flex items-center space-x-2 px-3 py-2 bg-gray-100 rounded-lg">
@@ -111,7 +111,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </div>
 
       {/* Chat Widget - Available on all pages except Assistant */}
-      {location.pathname !== '/assistant' && <ChatWidget />}
+      {/* {location.pathname !== '/assistant' && <ChatWidget />} */}
     </div>
   );
 };
