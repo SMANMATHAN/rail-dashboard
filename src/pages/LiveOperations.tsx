@@ -140,7 +140,7 @@ const LiveOperations: React.FC = () => {
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold text-gray-900">Live Operations</h2>
         <div className="flex items-center space-x-4">
-          <button
+          {/* <button
             onClick={() => setIsPlaying(!isPlaying)}
             className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
               isPlaying ? 'bg-orange-600 hover:bg-orange-700' : 'bg-green-600 hover:bg-green-700'
@@ -148,7 +148,7 @@ const LiveOperations: React.FC = () => {
           >
             {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
             <span>{isPlaying ? 'Pause' : 'Resume'}</span>
-          </button>
+          </button> */}
           <div className="text-sm text-gray-600">
             Last Updated: {new Date().toLocaleTimeString()}
           </div>

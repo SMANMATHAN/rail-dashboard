@@ -17,7 +17,7 @@ interface AIRecommendation {
   timestamp: Date;
 }
 
-interface AIRecommendationsPanelProps {
+interface chan {
   recommendations: AIRecommendation[];
   onAccept: (id: string) => void;
   onReject: (id: string) => void;
