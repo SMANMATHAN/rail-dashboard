@@ -10,8 +10,14 @@ import PunctualityMetrics from '../components/analytics/PunctualityMetrics';
 import DataExportPanel from '../components/export/DataExportPanel';
 import LiveRecordingWidget from '../components/insights/LiveRecordingWidget';
 import AlertsNotificationSystem from '../components/insights/AlertsNotificationSystem';
+import SimulationControl from '../components/simulation/SimulationControl';
+import NetworkVisualization from '../components/simulation/NetworkVisualization';
+import { useSimulation } from '../contexts/SimulationContext';
 
 const Dashboard: React.FC = () => {
+  // Simulation context
+  const { metrics, logs, isRunning } = useSimulation();
+  
   // Sample data - in real app, this would come from API
   const [searchValue, setSearchValue] = React.useState('');
   const [selectedLocation, setSelectedLocation] = React.useState('all');
@@ -23,7 +29,7 @@ const Dashboard: React.FC = () => {
   const kpiData = [
     {
       title: 'Active Trains',
-      value: '247',
+      value: metrics ? metrics.total_throughput.toString() : '247',
       icon: Train,
       color: 'blue' as const,
       trend: {
@@ -34,7 +40,7 @@ const Dashboard: React.FC = () => {
     },
     {
       title: 'On-Time Performance',
-      value: '94.2%',
+      value: metrics ? `${(100 - (metrics.average_delay / 60)).toFixed(1)}%` : '94.2%',
       icon: Clock,
       color: 'green' as const,
       trend: {
@@ -45,7 +51,7 @@ const Dashboard: React.FC = () => {
     },
     {
       title: 'Active Alerts',
-      value: '3',
+      value: metrics ? metrics.conflict_count.toString() : '3',
       icon: AlertTriangle,
       color: 'orange' as const,
       trend: {
@@ -67,7 +73,7 @@ const Dashboard: React.FC = () => {
     },
     {
       title: 'Network Throughput',
-      value: '247/hr',
+      value: metrics ? `${metrics.total_throughput}/hr` : '247/hr',
       icon: Activity,
       color: 'indigo' as const,
       trend: {
@@ -78,7 +84,7 @@ const Dashboard: React.FC = () => {
     },
     {
       title: 'Avg Delay Reduction',
-      value: '18.5min',
+      value: metrics ? `${(metrics.average_delay / 60).toFixed(1)}min` : '18.5min',
       icon: TrendingUp,
       color: 'blue' as const,
       trend: {
@@ -399,6 +405,19 @@ const Dashboard: React.FC = () => {
             trend={kpi.trend}
           />
         ))}
+      </div>
+
+      {/* SIMULATION Section */}
+      <div className="space-y-6">
+        <h3 className="text-2xl font-bold text-gray-900">Railway Simulation</h3>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Simulation Control */}
+          <SimulationControl />
+          
+          {/* Network Visualization */}
+          <NetworkVisualization />
+        </div>
       </div>
 
       {/* OPERATIONS Section */}

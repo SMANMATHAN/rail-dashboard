@@ -106,10 +106,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
         {/* Page Content */}
         <main className="p-6">
-          {children}
+          {children} 
         </main>
       </div>
-
       {/* Chat Widget - Available on all pages except Assistant */}
       {/* {location.pathname !== '/assistant' && <ChatWidget />} */}
     </div>

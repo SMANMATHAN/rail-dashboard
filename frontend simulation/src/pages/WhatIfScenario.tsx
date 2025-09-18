@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Play, RotateCcw, Download, AlertTriangle } from 'lucide-react';
-
+import NetworkMap from '../components/operations/NetworkMap';
+import type { Station, Train } from '../types/railway';
 interface Scenario {
   trainId: string;
   trainName: string;
@@ -33,6 +34,8 @@ const WhatIfScenario: React.FC = () => {
 
   const [simulationResult, setSimulationResult] = useState<SimulationResult | null>(null);
   const [isSimulating, setIsSimulating] = useState(false);
+  const [mapStations, setMapStations] = useState<Station[]>([]);
+  const [mapTrains, setMapTrains] = useState<Train[]>([]);
 
   const trainOptions = [
     { id: '12345', name: 'Rajdhani Express' },
@@ -76,7 +79,85 @@ const WhatIfScenario: React.FC = () => {
     };
     
     setSimulationResult(mockResult);
-    setIsSimulating(false);
+
+    // Create simple mock network for visualization
+    const stations: Station[] = [
+      {
+        id: 'S1',
+        name: 'Alpha',
+        code: 'ALP',
+        position: { x: 60, y: 80 },
+        platforms: [
+          { id: 'p1', number: '1', occupied: true, capacity: 2 },
+          { id: 'p2', number: '2', occupied: false, capacity: 2 }
+        ],
+        signals: [ { id: 'sg1', position: 'N', status: 'Green' } ]
+      },
+      {
+        id: 'S2',
+        name: 'Beta',
+        code: 'BET',
+        position: { x: 220, y: 150 },
+        platforms: [
+          { id: 'p3', number: '1', occupied: false, capacity: 2 },
+          { id: 'p4', number: '2', occupied: true, capacity: 2 }
+        ],
+        signals: [ { id: 'sg2', position: 'E', status: 'Green' } ]
+      },
+      {
+        id: 'S3',
+        name: 'Gamma',
+        code: 'GAM',
+        position: { x: 400, y: 90 },
+        platforms: [
+          { id: 'p5', number: '1', occupied: false, capacity: 2 },
+          { id: 'p6', number: '2', occupied: false, capacity: 2 }
+        ],
+        signals: [ { id: 'sg3', position: 'W', status: 'Green' } ]
+      },
+      {
+        id: 'S4',
+        name: 'Delta',
+        code: 'DEL',
+        position: { x: 580, y: 160 },
+        platforms: [
+          { id: 'p7', number: '1', occupied: false, capacity: 2 },
+          { id: 'p8', number: '2', occupied: true, capacity: 2 }
+        ],
+        signals: [ { id: 'sg4', position: 'S', status: 'Green' } ]
+      }
+    ];
+
+    const trains: Train[] = [
+      {
+        id: scenario.trainId,
+        name: scenario.trainName,
+        type: 'Express',
+        route: stations.map(s => s.id),
+        scheduledDeparture: new Date().toISOString(),
+        currentDelay: scenario.delay,
+        priority: 1,
+        status: 'Running',
+        currentStation: 'S1',
+        nextStation: 'S2'
+      },
+      {
+        id: 'FRE-90',
+        name: 'Freight 90',
+        type: 'Freight',
+        route: stations.map(s => s.id).reverse(),
+        scheduledDeparture: new Date().toISOString(),
+        currentDelay: 0,
+        priority: 0,
+        status: 'Running',
+        currentStation: 'S3',
+        nextStation: 'S4'
+      }
+    ];
+
+    setMapStations(stations);
+    setMapTrains(trains);
+    // keep isSimulating true to animate trains on the map
   };
 
   const resetScenario = () => {
@@ -88,6 +169,9 @@ const WhatIfScenario: React.FC = () => {
       platformChange: ''
     });
     setSimulationResult(null);
+    setMapStations([]);
+    setMapTrains([]);
+    setIsSimulating(false);
   };
 
   const exportResults = () => {
@@ -300,23 +384,13 @@ const WhatIfScenario: React.FC = () => {
         </div>
       </div>
 
-      {/* Simulation Preview Chart */}
+      {/* Simulation Preview Map */
+      }
       {simulationResult && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">Timeline Impact Visualization</h3>
-          </div>
-          <div className="p-6">
-            <div className="bg-gradient-to-r from-blue-50 to-orange-50 rounded-lg p-8">
-              <div className="text-center">
-                <p className="text-gray-600 mb-4">Interactive timeline chart would be displayed here</p>
-                <p className="text-sm text-gray-500">
-                  Showing before/after train schedules, conflict points, and optimization suggestions
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <>
+          <h3 className="text-lg font-semibold text-gray-900">Network Map</h3>
+          <NetworkMap stations={mapStations} trains={mapTrains} isSimulating={isSimulating} />
+        </>
       )}
     </div>
   );
